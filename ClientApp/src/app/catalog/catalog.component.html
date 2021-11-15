@@ -1,0 +1,33 @@
+<h1 id="tableLabel">Store Inventory</h1>
+
+<p>This is a super cool list of inventory</p>
+<!-- <button (click)="loadItems()">Load Items</button> -->
+
+<p *ngIf="!catalogItems"><em>Loading...</em></p>
+
+<button class="btn btn-primary" (click)="advanceDate()" *ngIf="catalogItems">View Next Day Stock</button>
+<button class="btn btn-info" (click)="viewDegraded()" *ngIf="catalogItems && !isViewingDegraded">View Degraded Items</button>
+<button  class="btn btn-info" (click)="viewAll()" *ngIf="catalogItems && isViewingDegraded">Back to All</button>
+<button class="btn btn-danger" (click)="resetDate()" *ngIf="catalogItems && hasAdvancedDay">Reset Date</button>
+
+<p>Currently viewing stock for {{ qualityDate | date}}</p>
+
+<table class='table table-striped' aria-labelledby="tableLabel" *ngIf="catalogItems">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Category</th>
+      <th>Sellin</th>
+      <th>Quality</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let item of catalogItems">
+      <td>{{ item.name }}</td>
+      <td>{{ item.category }}</td>
+      <td>{{ item.sellin }}</td>
+      <td>{{ item.quality }}</td>
+      <td><a (click)="viewDetail(item.id)">Item Detail</a></td>
+    </tr>
+  </tbody>
+</table>
