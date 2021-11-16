@@ -12,6 +12,7 @@ export class CatalogDetailComponent implements OnInit, OnDestroy {
   id: string;
   sub: any;
   itemDetails: CatalogItem;
+  qualityDate: Date;
 
 
   constructor(private route: ActivatedRoute, private http: HttpClient){

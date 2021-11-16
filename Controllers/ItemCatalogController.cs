@@ -22,15 +22,15 @@ namespace GildedRose.Controllers
         }
 
         [HttpGet]
-        public List<CatalogItem> Get()
+        public List<CatalogItem> Get(DateTime? currentDate)
         {
-            return _catalogService.GetItems();
+            return _catalogService.GetItems(currentDate ?? DateTime.Now);
         }
 
         [HttpGet("{id}")]
-        public CatalogItem Get(int id)
+        public CatalogItem Get(int id, DateTime? currentDate)
         {
-            return _catalogService.GetItem(id);
+            return _catalogService.GetItem(id, currentDate ?? DateTime.Now);
         }
 
         [HttpPost]

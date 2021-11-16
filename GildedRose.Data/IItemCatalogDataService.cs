@@ -8,7 +8,7 @@ namespace GildedRose
     public interface IItemCatalogDataService
     {
         void LoadTableData(List<CatalogItem> items);
-        CatalogItem GetItem(int id);
-        List<CatalogItem> GetItems();
+        CatalogItem GetItem(int id, DateTime dayForQualityEval);
+        List<CatalogItem> GetItems(DateTime dayForQualityEval);
     }
 }

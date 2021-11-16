@@ -72,7 +72,7 @@ namespace GildedRose
             }
         }
 
-        public CatalogItem GetItem(int id){
+        public CatalogItem GetItem(int id, DateTime dayForQualityEval){
             var item = new CatalogItem();
 
             try{
@@ -93,8 +93,8 @@ namespace GildedRose
                             item.InitialQuality = reader.GetInt32(4);
                             var date = reader.GetString(5);
                             item.DateUploaded = DateTime.Parse(date);
-                            item.EvaluateQuality();
-                            item.EvaluateSellin();
+                            item.EvaluateQuality(dayForQualityEval);
+                            item.EvaluateSellin(dayForQualityEval);
                         }
                     }
                 }
@@ -106,7 +106,7 @@ namespace GildedRose
             return item;
         }
         
-        public List<CatalogItem> GetItems(){
+        public List<CatalogItem> GetItems(DateTime dayForQualityEval){
             var items = new List<CatalogItem>();
 
             try{
@@ -128,8 +128,8 @@ namespace GildedRose
                             item.InitialQuality = reader.GetInt32(4);
                             var date = reader.GetString(5);
                             item.DateUploaded = DateTime.Parse(date);
-                            item.EvaluateQuality();
-                            item.EvaluateSellin();
+                            item.EvaluateQuality(dayForQualityEval);
+                            item.EvaluateSellin(dayForQualityEval);
                             items.Add(item);
                         }
                     }

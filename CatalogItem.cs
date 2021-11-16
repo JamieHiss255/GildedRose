@@ -24,61 +24,64 @@ namespace GildedRose
 
         public DateTime DateUploaded { get; set; }
 
-        public void EvaluateQuality(){
+        public void EvaluateQuality(DateTime dayForQualityEval){
+            System.TimeSpan dateSpanSinceUpload = dayForQualityEval.Subtract(this.DateUploaded);
+            var daysSinceUpload = dateSpanSinceUpload.Days;
+            var sellByDate = DateUploaded.AddDays(this.InitialSellin);
+            System.TimeSpan dateSpanUntilSellBy = sellByDate.Subtract(dayForQualityEval);
+            var daysUntilSellBy = dateSpanUntilSellBy.Days;
+
             //TODO verify the daily decrease is 1
-            if(this.Category == "Sulfuras"){
+            if(this.Category.ToLower() == "sulfuras"){
                 this.Quality = SulfurasDefault;
             }
-            else if(this.Category == "Backstage passes"){
-                var concertDay = DateUploaded.AddDays(this.InitialSellin);
-                System.TimeSpan dateDifference = concertDay.Subtract(DateTime.Now);
-                var daysToConcert = dateDifference.Days;
-                System.TimeSpan daysPassed = DateTime.Now.Subtract(DateUploaded);
-                var daysPassedSinceUpload = daysPassed.Days;
+            else if(this.Category.ToLower() == "backstage passes"){
 
-                if(daysToConcert < 0){
+                if(daysUntilSellBy < 0){
                     this.Quality = 0;
                 }
                 else{
-                    this.Quality = InitialQuality + (DailyChange * daysPassedSinceUpload);
-                    if(daysToConcert < 10){
-                        var premiumDays = 10 - daysToConcert;
-                        this.Quality += daysPassedSinceUpload < premiumDays ? DailyChange * daysPassedSinceUpload: DailyChange * premiumDays;
+                    this.Quality = InitialQuality + (DailyChange * daysSinceUpload);
+                    if(daysUntilSellBy < 10){
+                        var premiumDays = 10 - daysUntilSellBy;
+                        this.Quality += daysSinceUpload < premiumDays ? DailyChange * daysSinceUpload: DailyChange * premiumDays;
                     }
-                    if(daysToConcert < 5){
-                        var premiumDays = 5 - daysToConcert;
-                        this.Quality += daysPassedSinceUpload < premiumDays ? DailyChange * daysPassedSinceUpload: DailyChange * premiumDays;
+                    if(daysUntilSellBy < 5){
+                        var premiumDays = 5 - daysUntilSellBy;
+                        this.Quality += daysSinceUpload < premiumDays ? DailyChange * daysSinceUpload: DailyChange * premiumDays;
                     }
                 }
                 
                 this.Quality = this.Quality > ItemCap ? ItemCap : this.Quality;
             }
-            else if(this.Category == "Conjured"){
-                System.TimeSpan dateDifference = DateTime.Now.Subtract(this.DateUploaded);
-                var newQuality = InitialQuality - (2 * DailyChange * dateDifference.Days);
+            else if(this.Category.ToLower() == "conjured"){
+                var newQuality = InitialQuality - (2 * DailyChange * daysSinceUpload);
                 this.Quality = newQuality < 0 ? 0 : newQuality; 
             }
             else{
-                if(this.Name == "Aged Brie"){
-                    System.TimeSpan dateDifference = DateTime.Now.Subtract(this.DateUploaded);
-                    var newQuality = InitialQuality + (DailyChange * dateDifference.Days);
+                if(this.Name.ToLower() == "aged brie"){
+                    var newQuality = InitialQuality + (DailyChange * daysSinceUpload);
                     this.Quality = newQuality > ItemCap ? ItemCap : newQuality;
                 }
+                else if(daysUntilSellBy < 0){
+                    var newQuality = InitialQuality - (2 * DailyChange * daysSinceUpload);
+                    this.Quality = newQuality < 0 ? 0 : newQuality; 
+                }
                 else{
-                    System.TimeSpan dateDifference = DateTime.Now.Subtract(this.DateUploaded);
-                    var newQuality = InitialQuality - (DailyChange * dateDifference.Days);
+                    var newQuality = InitialQuality - (DailyChange * daysSinceUpload);
                     this.Quality = newQuality < 0 ? 0 : newQuality; 
                 }
             }
         }
 
-        public void EvaluateSellin(){
-            if(this.Category == "Sulfuras"){
+        public void EvaluateSellin(DateTime dayForQualityEval){
+            if(this.Category.ToLower() == "sulfuras"){
                 this.Sellin = this.InitialSellin;
             }
             else{
-                System.TimeSpan dateDifference = DateTime.Now.Subtract(this.DateUploaded);
-                this.Sellin = this.InitialSellin - dateDifference.Days;
+                System.TimeSpan dateDifference = dayForQualityEval.Subtract(this.DateUploaded);
+                var newSellin = this.InitialSellin - dateDifference.Days;
+                this.Sellin = newSellin < 0 ? 0: newSellin;
             }
         }
     }

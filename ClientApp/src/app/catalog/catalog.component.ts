@@ -24,11 +24,20 @@ export class CatalogComponent implements OnInit {
 
   ngOnInit(): void {
     this.qualityDate = new Date();
-    this.getAllItems().subscribe(items =>{ this.allItems = items; this.catalogItems = items; });
+    this.getAllItems();
   }
 
-  getAllItems(): Observable<CatalogItem[]>{
-    return this.http.get<CatalogItem[]>(this.catalogUrl);
+  getAllItems(){
+    return this.http.get<CatalogItem[]>(this.catalogUrl + `?currentDate=${this.qualityDate.toISOString()}`)
+    .toPromise()
+    .then((res) => {
+      this.allItems = res; 
+      this.catalogItems = res;
+      this.isViewingDegraded = false;
+    })
+    .catch((err) => {
+      console.log(err);
+    });
   }
   
   viewDetail(id: string){
@@ -44,11 +53,13 @@ export class CatalogComponent implements OnInit {
       newDate.getDate()
     );
     this.hasAdvancedDay = true;
+    this.getAllItems();
   }
 
   resetDate(){
     this.qualityDate = new Date();
     this.hasAdvancedDay = false;
+    this.getAllItems();
   }
 
   viewDegraded(){
